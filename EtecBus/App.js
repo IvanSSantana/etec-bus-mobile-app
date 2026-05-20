@@ -229,10 +229,71 @@ export default function App() {
     } catch (_) { }
   }
 
+  function openNavigation() {}
+
+  if (loading) {}
+
+  const html = buildLeaftletHTML(
+    userLocation,
+    nearestStop?.id ?? '',
+    selectedStop?.id ?? ''
+  );
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
+
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>🚌 Ônibus para Etec</Text>
+        <Text style={styles.headerSub}>{SCHOOL.name}</Text>
+      </View>
+
+      <WebView
+        ref={webViewRef}
+        style={styles.map}
+        originWhitelist={['*']}
+        source={{ html }}
+        onMessage={handleWebViewMessage}
+        javaScriptEnabled
+        domStorageEnabled
+        mixedContentMode='always'
+      />
+
+      <TouchableOpacity
+        style={styles.fitButton}
+        onPress={() => webViewRef.current?.postMessage(JSON.stringify({ type: 'FIT_ALL'}))}
+      >
+        <Text style={styles.fitButtonText}>🌐 Ver Todos</Text>
+      </TouchableOpacity>
+
+      <View style={styles.panel}>
+        {locationGranted && nearestStop ? (
+          <View style={styles.nearestBanner}>
+            <Text style={styles.nearestLabel}>📍 Ponto mais próximo de você</Text>
+            <Text style={styles.nearestName}>{nearestStop.name}</Text>
+            <Text style={styles.nearestDist}>{formatDistance(nearestStop.distance)} de distância</Text>
+          </View>
+        ) : !locationGranted ? (
+          <View style={styles.noGpsBanner}>
+            <Text style={styles.noGpsText}> 📵 GPS Desativado - mostrando todos os pontos</Text>
+          </View>
+        ) : null}
+
+        </View>
+
+        {selectedStop && (
+          <View style={styles.selectedCard}>
+            <View style={{ flex: 1}}>
+              <Text style={styles.selectedName}>{selectedStop.name}</Text>
+              <Text style={styles.selectedLines}>{selectedStop.lines.join(' • ')}</Text>
+            </View>
+
+            <TouchableOpacity style={styles.navBtn} onPress={openNavigation}>
+              <Text style={styles.navBtnText}>Navegar</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
     </View>
   );
 }
@@ -240,8 +301,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: '#f5f7fa',
+  },
+  loading: {
+    flex: 1,
     justifyContent: 'center',
+    alignContent: 'center',
+  },
+  loadingText: {
+    marginTop: 12,
+    color: '#555',
+    fontSize: 15
   },
 });
