@@ -229,9 +229,26 @@ export default function App() {
     } catch (_) { }
   }
 
-  function openNavigation() {}
+  function openNavigation() {
+    if (!selectedStop) return;
 
-  if (loading) {}
+    const { latitude, longitude } = selectedStop.coordinate;
+    const url = Platform.select({
+      ios: `maps://app?daddr=${latitude},${longitude}`,
+      android: `google.navigation:q=${latitude},${longitude}`
+    });
+    
+    Linking.openURL(url).catch(() => {});
+  }
+
+  if (loading) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size='large' color='#1E88E5' />
+        <Text style={styles.loadingText}>Carregando mapa...</Text>
+      </View>
+    );
+  }
 
   const html = buildLeaftletHTML(
     userLocation,
@@ -313,4 +330,103 @@ const styles = StyleSheet.create({
     color: '#555',
     fontSize: 15
   },
+  header: {
+    paddingTop: 54,
+    paddingBottom: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0'
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1A237E',
+  },
+  headerSub: {
+    fontSize: 13,
+    color: '#666',
+    marginTop: 2,
+  },
+  map: {flex: 1},
+  fitButton: {
+    position: 'absolute',
+    top: 130,
+    right: 16,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2}
+  },
+  fitButtonText: {
+    fontSize: 13,
+    color: '#1A237E',
+    fontWeight: '600',
+  },
+  panel: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingBottom: 50,
+    paddingTop: 12,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: -3 },
+  },
+  nearestBanner: {
+    backgroundColor: '#E3F2FD',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 10
+  },
+  nearestLabel: {
+    fontSize: 11,
+    color: '#1565C0',
+    fontWeight: '600',
+    textTransform: 'uppercase'
+  },
+  nearestName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0D47A1',
+    marginTop: 2,
+  },
+  nearestDist: {
+    fontSize: 13,
+    color: '#42A5F5',
+    marginTop: 2 
+  },
+  noGpsBanner: {
+    backgroundColor: '#FFF8E1',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 10
+  },
+  noGpsText: {
+    fontSize: 13,
+    color: '#F57F17'
+  },
+  selectedCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8F9FF',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#C5CAE9'
+  },
+  selectedName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1A237E',
+    flexShrink: 1
+  }
 });
