@@ -8,56 +8,140 @@ import { StatusBar } from 'expo-status-bar';
 const SCHOOL = {
   id: 'school',
   name: 'ETEC Comendador João Rays',
-  coordinate: { latitude: -22.489233172207847, longitude: -48.546409528694575},
-  address: 'Rua Ludovico Victório, 2140, Barra Bonita - SP  '
+  coordinate: { latitude: -22.489198202294652, longitude: -48.546405739343 },
+  address: 'Rua Ludovico Victório, 2140, Barra Bonita - SP'
 }
 
 const BUS_STOPS = [
   {
     id: 'stop_1',
     name: 'Autoescola Muriano',
-    coordinate: { latitude: -22.48407736695823, longitude: -48.564716875350165 },
+    address: 'R. Geraldo Fazzio, 484',
+    coordinate: { latitude: -22.48428004850243, longitude: -48.56480739260246 },
     lines: ['Nova Barra'],
-    address: 'R. Geraldo Fazzio, 484'
   },
   {
-     
-  }
-]
+    id: 'stop_2',
+    name: 'Escola Mariana',
+    address: 'R. Geraldo Fazzio, 740',
+    coordinate: { latitude: -22.482252695948073, longitude: -48.565484268506786 },
+    lines: ['Nova Barra'],
+  },
+  {
+    id: 'stop_3',
+    name: 'Cruzamento Rubens Pedro de Oliveira com Bernardino Santili',
+    address: 'R. Rubens Pedro de Oliveira c/ Bernardino Santili',
+    coordinate: { latitude: -22.478407834366728, longitude: -48.57461784480995 },
+    lines: ['Nova Barra'],
+  },
+  {
+    id: 'stop_4',
+    name: 'Padaria Nova Barra',
+    address: 'R. Giacomo Abruzzi c/ Santo Gatto',
+    coordinate: { latitude: -22.483343277701522, longitude: -48.57230651531636 },
+    lines: ['Nova Barra'],
+  },
+  // {
+  //   id: 'stop_5',
+  //   name: 'Vidraçaria - São Joaquim',
+  //   address: 'Estrada José Anibal, 120',
+  //   coordinate: null,
+  //   lines: ['Nova Barra'],
+  // },
+  // {
+  //   id: 'stop_6',
+  //   name: 'Beach Tenis',
+  //   address: 'Planalto verde',
+  //   coordinate: null,
+  //   lines: ['Nova Barra'],
+  // },
+  {
+    id: 'stop_7',
+    name: 'Coqueiro',
+    address: 'R. Santo Gatto c/ Santo Petri',
+    coordinate: { latitude: -22.48573, longitude: -48.57317 },
+    lines: ['Nova Barra'],
+  },
+  {
+    id: 'stop_8',
+    name: 'Edícula do Nilton',
+    address: 'R. Santo Petri c/ Batista Gabri',
+    coordinate: { latitude: -22.48573, longitude: -48.57317 },
+    lines: ['Nova Barra'],
+  },
+  {
+    id: 'stop_9',
+    name: 'Campo Alcindão',
+    address: 'R. Santo Petri',
+    coordinate: { latitude: -22.48573, longitude: -48.57317 },
+    lines: ['Nova Barra'],
+  },
+  // {
+  //   id: 'stop_10',
+  //   name: 'Boca rica',
+  //   address: 'R. Dos Imigrantes c/ R. Domingos Guedin',
+  //   coordinate: null,
+  //   lines: ['Nova Barra'],
+  // },
+  // {
+  //   id: 'stop_11',
+  //   name: 'Cerâmica do Bolacha',
+  //   address: 'R. 23 de Maio c/ Salvador de Toledo',
+  //   coordinate: null,
+  //   lines: ['Nova Barra'],
+  // },
+  // {
+  //   id: 'stop_12',
+  //   name: 'Vila nova',
+  //   address: 'R. Prudente de Morais, 1354',
+  //   coordinate: null,
+  //   lines: ['Nova Barra'],
+  // },
+  // {
+  //   id: 'stop_13',
+  //   name: 'Padaria da Elza',
+  //   address: 'Av. Caio Simões, 428',
+  //   coordinate: null,
+  //   lines: ['Nova Barra'],
+  // },
+  // {
+  //   id: 'stop_14',
+  //   name: 'Igreja Matriz',
+  //   address: 'R. Prudente de Morais',
+  //   coordinate: null,
+  //   lines: ['Nova Barra'],
+  // },
+];
 
 // Distância Haversine (metros)
-function getDistance(coord1, coord2) {
-  const R = 6371e3; // Raio da Terra em metros
-  const phi1 = coord1.latitude * Math.PI / 180;
-  const phi2 = coord2.latitude * Math.PI / 180;
-  const deltaPhi = (coord2.latitude - coord1.latitude) * Math.PI / 180;
-  const deltaLambda = (coord2.longitude - coord1.longitude) * Math.PI / 180;
-
-  const a = Math.sin(deltaPhi/2) ** 2 +
-    Math.cos(phi1) * Math.cos(phi2) *
-    Math.sin(deltaLambda/2) ** 2;
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-  return R * c; // Distância em metros
+function getDistance(c1, c2) {
+  const R = 6371e3;
+  const q1 = (c1.latitude * Math.PI) / 180;
+  const q2 = (c2.latitude * Math.PI) / 180;
+  const dq = ((c2.latitude - c1.latitude) * Math.PI) / 180;
+  const dt = ((c2.longitude - c1.longitude) * Math.PI) / 180;
+  const a = 
+    Math.sin(dq / 2) ** 2 +
+    Math.cos(q1) * Math.cos(q2) * Math.sin(dt / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function formatDistance(distance) {
-  return distance < 100 ? `${Math.round(distance)} m` : `${(distance / 1000).toFixed(1)} km`;
+function formatDistance(m) {
+  return m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`;
 }
 
-// HTML do Leaflet (OpenStreetMap - sem chave)]
-function buildLeaftletHTML(userCoord, nearestStopId, selectedStopId) {
+// HTML do Leaflet (OpenStreetMap - sem chave)
+function buildLeafletHTML(userCoord, nearestStopId, selectedStopId) {
   const stopsJSON = JSON.stringify(BUS_STOPS);
   const schoolJSON = JSON.stringify(SCHOOL);
   const userJSON = userCoord ? JSON.stringify(userCoord) : 'null';
 
   return `<!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
   <style>
@@ -78,12 +162,11 @@ function buildLeaftletHTML(userCoord, nearestStopId, selectedStopId) {
 
 <body>
   <div id="map"></div>
-
   <script>
     const SCHOOL = ${ schoolJSON };
     const BUS_STOPS = ${ stopsJSON };
-    let userCoordinate = ${ userJSON };
-    let nearestId = "${nearestStopId || ''}";
+    const userCoord = ${ userJSON };
+    const nearestId = "${nearestStopId || ''}";
 
     const map = L.map('map', { zoomControl: true }).setView(
       [SCHOOL.coordinate.latitude, SCHOOL.coordinate.longitude], 14
@@ -91,33 +174,34 @@ function buildLeaftletHTML(userCoord, nearestStopId, selectedStopId) {
 
     // Tiles OpenStreetMap - gratuito, sem chave
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: '® <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19
     }).addTo(map);
 
     function makeIcon(color, emoji) {
       return L.divIcon({
         className: '',
-        html: \`<div style="background:\${color};width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border: 3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;"> <span style="transform:rotate(45deg);font-size:16px">\${emoji}</span></div>\`, iconSize: [36, 36], iconAnchor: [18, 36], popupAnchor: [0, -38]
+        html: \`<div style="background:\${color};width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;"><span style="transform:rotate(45deg);font-size:16px">\${emoji}</span></div>\`,
+        iconSize: [36, 36], iconAnchor: [18, 36], popupAnchor: [0, -38]
       });
     }
 
     const schoolIcon = makeIcon('#E53935', '🏫');
     const stopDefault = makeIcon('#FFA726', '🚌');
     const stopNearest = makeIcon('#00ACC1', '🚌');
-    const userIconObj = makeIcon('#43A047', '📌');
+    const userIconObj = makeIcon('#43A047', '📍');
 
     // Escola
     L.marker([SCHOOL.coordinate.latitude, SCHOOL.coordinate.longitude], {icon: schoolIcon})
       .addTo(map)
       .bindPopup('<b>'+SCHOOL.name+'</b><br>'+SCHOOL.address);
-
-    // Pontos de Ônibus
+    
+    // Pontos de ônibus
     BUS_STOPS.forEach(stop => {
       const icon = stop.id === nearestId ? stopNearest : stopDefault;
       L.marker([stop.coordinate.latitude, stop.coordinate.longitude], {icon})
         .addTo(map)
-        .bindPopup(\`<b>${stop.name}</b><br>Linhas: '${stop.lines.join(', ')}'\`)
+        .bindPopup('<b>'+stop.name+'</b><br>Linhas: '+stop.lines.join(', '))
         .on('click', () => {
           window.ReactNativeWebView && window.ReactNativeWebView.postMessage(
             JSON.stringify({type:'SELECT_STOP', stopId:stop.id})
@@ -126,50 +210,42 @@ function buildLeaftletHTML(userCoord, nearestStopId, selectedStopId) {
     });
 
     // Localização do usuário
-    if (userCoordinate) {
-      L.marker([userCoordinat.latitude, userCoordinate.longitude], {icon:userIconObj})
-        .addTo(map)
-        .bindPopup('<b>Você está aqui</b>')  
+    if (userCoord) {
+      L.marker([userCoord.latitude, userCoord.longitude], {icon:userIconObj})
+        .addTo(map).bindPopup('<b>Você está aqui</b>');
     }
 
     // Rota pontilhada
     let routeLine = null;
-
     function drawRoute(stopId) {
       if (routeLine) map.removeLayer(routeLine);
-      
       const stop = BUS_STOPS.find(s => s.id === stopId);
       if (!stop) return;
-
       routeLine = L.polyline(
-        [
-          [stop.coordinate.latitude, stop.coordinate.longitude],
-          [SCHOOL.coordinate.latitude, SCHOOL.coordinate.longitude]
-        ],
-        {color: '#1E88E5', weight: 3, dashArray: '10,6', opacity: 0.9}
+        [[stop.coordinate.latitude, stop.coordinate.longitude],
+         [SCHOOL.coordinate.latitude, SCHOOL.coordinate.longitude]],
+        {color:'#1E88E5', weight: 3, dashArray:'10,6', opacity:0.9}
       ).addTo(map);
     }
-    
-    // Rota inicial
+
+    // Rota Inicial
     const initialSel = "${selectedStopId || nearestStopId || ''}";
     if (initialSel) drawRoute(initialSel);
 
     // Ajusta Zoom
-    const allCoordinates = BUS_STOPS.map(s => [s.coordinate.latitude, s.coordinate.longitude]);
-    allCoordinates.push([SCHOOL.coordinate.latitude, SCHOOL.coordinate.longitude]);
-
-    if (userCoordinate) allCoordinates.push([userCoordinate.latitude, userCoordinate.longitude]);
-    map.fitBounds(allCoordinates, {padding: [40, 40]});
+    const allCoords = BUS_STOPS.map(s=>[s.coordinate.latitude, s.coordinate.longitude]);
+    allCoords.push([SCHOOL.coordinate.latitude, SCHOOL.coordinate.longitude]);
+    if (userCoord) allCoords.push([userCoord.latitude, userCoord.longitude]);
+    map.fitBounds(allCoords, {padding:[40,40]});
 
     // Mensagens do React Native
     function handleMsg(e) {
       try {
         const msg = JSON.parse(e.data);
-        if (msg.type === 'DRAW_ROUTE') drawRoute(msg.stopId);
-        if (msg.type === 'FIT_ALL') map.fitBounds(allCoordinates, {padding: [40,40]});
+        if (msg.type==='DRAW_ROUTE') drawRoute(msg.stopId);
+        if (msg.type==='FIT_ALL') map.fitBounds(allCoords, {padding:[40,40]});
       } catch (_) {}
     }
-    
     document.addEventListener('message', handleMsg);
     window.addEventListener('message', handleMsg);
   <\/script>
@@ -186,7 +262,7 @@ export default function App() {
   const [selectedStop, setSelectedStop] = useState(null);
   const [locationGranted, setLocationGranted] = useState(false);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -195,22 +271,19 @@ export default function App() {
         const loc = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
         });
-
         const coord = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
         setUserLocation(coord);
 
         let nearest = null, minDist = Infinity;
         BUS_STOPS.forEach(stop => {
           const d = getDistance(coord, stop.coordinate);
-          if (d < minDist) { minDist = d; nearest = {...stop, distance: d}; }
+          if (d < minDist) { minDist = d; nearest = { ...stop, distance: d }; }
         });
-
         setNearestStop(nearest);
         setSelectedStop(nearest);
       } else {
         setSelectedStop(BUS_STOPS[0]);
       }
-
       setLoading(false);
     })();
   }, []);
@@ -220,24 +293,23 @@ export default function App() {
       const msg = JSON.parse(event.nativeEvent.data);
       if (msg.type === 'SELECT_STOP') {
         const stop = BUS_STOPS.find(s => s.id === msg.stopId);
-
         if (stop) {
           selectedStop(stop);
-          webViewRef.current?.postMessage(JSON.stringify({ type: 'DRAW_ROUTE', stopId: stop.id }));
+          webViewRef.current?.postMessage(
+            JSON.stringify({ type: 'DRAW_ROUTE', stopId: stop.id })
+          );
         }
       }
     } catch (_) { }
   }
 
-  function openNavigation() {
+  function openNavigation(){
     if (!selectedStop) return;
-
     const { latitude, longitude } = selectedStop.coordinate;
     const url = Platform.select({
       ios: `maps://app?daddr=${latitude},${longitude}`,
       android: `google.navigation:q=${latitude},${longitude}`
     });
-    
     Linking.openURL(url).catch(() => {});
   }
 
@@ -250,18 +322,18 @@ export default function App() {
     );
   }
 
-  const html = buildLeaftletHTML(
+  const html = buildLeafletHTML(
     userLocation,
     nearestStop?.id ?? '',
     selectedStop?.id ?? ''
   );
 
-  return (
+  return (  
     <View style={styles.container}>
       <StatusBar style="dark" />
 
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>🚌 Ônibus para Etec</Text>
+        <Text style={styles.headerTitle}>🚌 Ônibus para Escola</Text>
         <Text style={styles.headerSub}>{SCHOOL.name}</Text>
       </View>
 
@@ -273,14 +345,16 @@ export default function App() {
         onMessage={handleWebViewMessage}
         javaScriptEnabled
         domStorageEnabled
-        mixedContentMode='always'
+        mixedContentMode="always"
       />
 
       <TouchableOpacity
         style={styles.fitButton}
-        onPress={() => webViewRef.current?.postMessage(JSON.stringify({ type: 'FIT_ALL'}))}
+        onPress={() => webViewRef.current?.postMessage(
+          JSON.stringify({ type: 'FIT_ALL'})
+        )}
       >
-        <Text style={styles.fitButtonText}>🌐 Ver Todos</Text>
+        <Text style={styles.fitButtonText}>🌎 Ver Todos</Text>
       </TouchableOpacity>
 
       <View style={styles.panel}>
@@ -288,28 +362,31 @@ export default function App() {
           <View style={styles.nearestBanner}>
             <Text style={styles.nearestLabel}>📍 Ponto mais próximo de você</Text>
             <Text style={styles.nearestName}>{nearestStop.name}</Text>
-            <Text style={styles.nearestDist}>{formatDistance(nearestStop.distance)} de distância</Text>
+            <Text style={styles.nearestDist}>
+              {formatDistance(nearestStop.distance)} de distância
+            </Text>
           </View>
-        ) : !locationGranted ? (
+        ): !locationGranted ? (
           <View style={styles.noGpsBanner}>
-            <Text style={styles.noGpsText}> 📵 GPS Desativado - mostrando todos os pontos</Text>
+            <Text style={styles.noGpsText}>
+              📵 GPS Desativado - mostrando todos os pontos
+            </Text>
           </View>
-        ) : null}
-
-        </View>
-
+        ): null}
+      
         {selectedStop && (
           <View style={styles.selectedCard}>
-            <View style={{ flex: 1}}>
+            <View style={{ flex: 1 }}>
               <Text style={styles.selectedName}>{selectedStop.name}</Text>
               <Text style={styles.selectedLines}>{selectedStop.lines.join(' • ')}</Text>
             </View>
-
             <TouchableOpacity style={styles.navBtn} onPress={openNavigation}>
               <Text style={styles.navBtnText}>Navegar</Text>
             </TouchableOpacity>
           </View>
         )}
+      
+      </View>
 
     </View>
   );
@@ -323,7 +400,7 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
     justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
   },
   loadingText: {
     marginTop: 12,
@@ -336,17 +413,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0'
+    borderBottomColor: "#E0E0E0"
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1A237E',
+    color: '#1A237E'
   },
   headerSub: {
     fontSize: 13,
     color: '#666',
-    marginTop: 2,
+    marginTop: 2
   },
   map: {flex: 1},
   fitButton: {
@@ -366,7 +443,7 @@ const styles = StyleSheet.create({
   fitButtonText: {
     fontSize: 13,
     color: '#1A237E',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   panel: {
     backgroundColor: '#fff',
@@ -391,7 +468,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#1565C0',
     fontWeight: '600',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   nearestName: {
     fontSize: 15,
@@ -402,7 +479,7 @@ const styles = StyleSheet.create({
   nearestDist: {
     fontSize: 13,
     color: '#42A5F5',
-    marginTop: 2 
+    marginTop: 2
   },
   noGpsBanner: {
     backgroundColor: '#FFF8E1',
@@ -428,5 +505,22 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1A237E',
     flexShrink: 1
+  },
+  selectedLines: {
+    fontSize: 12,
+    color: '#5C6BC0',
+    marginTop: 3
+  },
+  navBtn: {
+    backgroundColor: '#1e88e5',
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginLeft: 10
+  },
+  navBtnText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 13
   }
 });
